@@ -27,7 +27,11 @@ public class DayOfWeekProductDiscount implements ProductDiscount {
     @Override
     public String getText() {
         return String.format("Op %s voor € %.2f per stuk",
-                dayOfWeek.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("nl", "NL")),
+                getDayOfWeekDisplayName(),
                 price / 100.0d);
+    }
+
+    private String getDayOfWeekDisplayName() {
+        return dayOfWeek.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("nl", "NL"));
     }
 }
