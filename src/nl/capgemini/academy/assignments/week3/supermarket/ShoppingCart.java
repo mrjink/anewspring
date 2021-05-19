@@ -23,8 +23,8 @@ public class ShoppingCart {
         products.clear();
     }
 
-    public void add(Product product) {
-        products.compute(product, (prod, num) -> num == null ? 1 : num + 1);
+    public void add(Product product, int quantity) {
+        products.compute(product, (prod, num) -> num == null ? quantity : num + quantity);
     }
 
     public void remove(Product product) {
@@ -39,20 +39,29 @@ public class ShoppingCart {
         if (discountTotal == rawTotal) {
             System.out.format("TOTAAL: %-41s € %6.2f%n", "", discountTotal / 100.0d);
         } else {
-            System.out.format("TOTAAL:             € %6.2f - € %6.2f (BONUS) = € %6.2f%n", rawTotal / 100.0d, (rawTotal - discountTotal) / 100.0d, discountTotal / 100.0d);
+            System.out.format("TOTAAL:             € %6.2f - € %6.2f (BONUS) = € %6.2f%n",
+                    rawTotal / 100.0d,
+                    (rawTotal - discountTotal) / 100.0d,
+                    discountTotal / 100.0d);
         }
     }
 
     private BiConsumer<Product, Integer> printLine() {
         return (prod, num) -> {
             int price = prod.getPrice();
-            int total = num * prod.getPrice();
-            System.out.format("%3d × %-30s @ € %6.2f = € %6.2f%n", num, prod.getName(), price / 100.0d, total / 100.0d);
+            int total = num * price;
+            System.out.format("%3d × %-30s @ € %6.2f = € %6.2f%n",
+                    num,
+                    prod.getName(),
+                    price / 100.0d,
+                    total / 100.0d);
             ProductDiscount productDiscount = discounts.get(prod);
             if (productDiscount != null) {
                 int discountPrice = productDiscount.getPrice(prod, num);
                 if (discountPrice != total) {
-                    System.out.format("      BONUS: %-36s € %6.2f%n", productDiscount.getText(), (discountPrice - total) / 100.0d);
+                    System.out.format("      BONUS: %-36s € %6.2f%n",
+                            productDiscount.getText(),
+                            (discountPrice - total) / 100.0d);
                 }
             }
         };
@@ -66,7 +75,9 @@ public class ShoppingCart {
             sum += prod.getPrice() * num;
         }
         return sum;
-        //        return products.entrySet().stream().mapToInt(e -> e.getKey().getPrice() * e.getValue()).sum();
+        //        return products.entrySet().stream()
+        //       .mapToInt(e -> e.getKey().getPrice() * e.getValue())
+        //      .sum();
     }
 
     public int discountTotal() {
