@@ -7,12 +7,16 @@ import nl.capgemini.academy.assignments.week3.supermarket.discounts.products.Qua
 import nl.capgemini.academy.assignments.week3.supermarket.payments.Card;
 import nl.capgemini.academy.assignments.week3.supermarket.payments.Cash;
 import nl.capgemini.academy.assignments.week3.supermarket.payments.PaymentMethod;
+import nl.capgemini.academy.assignments.week3.supermarket.printers.CartPrinter;
+import nl.capgemini.academy.assignments.week3.supermarket.printers.ConsolePrinter;
 
 import java.security.SecureRandom;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 public class Application {
     private static final Random RANDOM = new SecureRandom();
@@ -28,10 +32,12 @@ public class Application {
         Product kwark = new Product("Kwark", 199);
         Product luiers = new Product("Luiers", 999);
 
-        ShoppingCart cart = new ShoppingCart();
-        cart.addDiscount(luiers, quantityProductDiscount);
-        cart.addDiscount(robijn, percentageProductDiscount);
-        cart.addDiscount(kwark, dayOfWeekProductDiscount);
+        Map<Product, ProductDiscount> discounts = new TreeMap<>();
+        discounts.put(luiers, quantityProductDiscount);
+        discounts.put(robijn, percentageProductDiscount);
+        discounts.put(kwark, dayOfWeekProductDiscount);
+
+        ShoppingCart cart = new ShoppingCart(discounts);
 
         List<Product> products = new ArrayList<>();
         products.add(robijn);
@@ -45,7 +51,8 @@ public class Application {
         }
 
         PaymentMethod paymentMethod = getRandomPaymentMethod();
-        cart.print();
+        CartPrinter printer = new ConsolePrinter();
+        printer.print(cart);
         paymentMethod.pay(cart);
         System.out.println();
     }
