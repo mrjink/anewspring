@@ -1,0 +1,13 @@
+body {
+    background-color: rgb(250, 234, 214);
+}
+
+h1 {
+    font-family: Arial Narrow, Verdana, sans-serif;
+    font-size: 48pt;
+}
+
+h2 {
+    font-family: Wingdings;
+    color: red;
+}
